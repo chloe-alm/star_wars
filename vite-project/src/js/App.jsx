@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import logo from "../assets/logo.svg";
-import "../css/App.css";
+import "../css/app.css";
 
 //acces a ces differentes valeurs grace aux hook et useDisache permet d appelle une action
 import { useSelector, useDispatch } from "react-redux";
 import { decrement, increment } from "./store/counterSlice";
+import { Header } from "./components/Header";
+import { setName, clearName } from "./store/settings";
 
 function App() {
   // const [count, setCount] = useState(0);
@@ -14,6 +16,7 @@ function App() {
   const dispatch = useDispatch();
   return (
     <div className="App">
+      <Header />
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>Hello Vite + React!</p>
@@ -27,6 +30,10 @@ function App() {
         <p>
           Edit <code>App.jsx</code> and save to test HMR updates.
         </p>
+        <button onClick={() => dispatch(setName("redux toolkit is cool"))}>
+          change app name
+        </button>
+        <button onClick={() => dispatch(clearName(""))}>clear app name</button>
         <p>
           <a
             className="App-link"
