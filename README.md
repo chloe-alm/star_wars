@@ -12,4 +12,8 @@ Ce projet permet de s'initier à redux
 React / Redux Toolkit
 [voir la doc](https://redux-toolkit.js.org/tutorials/quick-start)
 
+## Installation
 
+$ cd vite projet 
+$ npm install 
+$ npm run dev
