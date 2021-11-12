@@ -1,59 +1,63 @@
-import React, { useState } from "react";
-import logo from "../assets/logo.svg";
-import "../css/app.css";
+import React from "react";
+import { Routes, Route } from "react-router-dom";
 
-//acces a ces differentes valeurs grace aux hook et useDisache permet d appelle une action
-import { useSelector, useDispatch } from "react-redux";
-import { decrement, increment } from "./store/counterSlice";
-import { Header } from "./components/Header";
-import { setName, clearName } from "./store/settings";
+import { useSelector } from "react-redux";
+
+//auth
+import { RequireAuth } from "./features/auth/requireAuth";
+import { useIsAuth } from "./hooks/useIsAuth";
+
+//Public
+import { LoginPage } from "./features/login/loginPage";
+import { UsersManager } from "./features/users/usersManager";
+import { RegisterPage } from "./features/register/RegisterPage";
+
+//Protected
+import { PeopleManager } from "./features/people/PeopleManager";
+import { StarshipsManager } from "./features/starships/StarshipsManager";
+
+import "../css/App.css";
+import { Layout } from "./features/layout/Layout";
 
 function App() {
-  // const [count, setCount] = useState(0);
-  // une fonction qui prend en valeur la value
-  const count = useSelector((state) => state.counter.value);
-  //pouvoir utiliser les fonctions
-  const dispatch = useDispatch();
+  const isInitialized = useSelector((state) => state.auth.isInitialized);
+
+  useIsAuth();
+
+  if (!isInitialized) return <p>App is Loading</p>;
+
   return (
     <div className="App">
-      <Header />
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>Hello Vite + React!</p>
-        <p>
-          <button onClick={() => dispatch(increment())}>increment</button>
-          <button onClick={() => dispatch(decrement())}>decrement</button>
-        </p>
-        <p>
-          <strong>{count}</strong>
-        </p>
-        <p>
-          Edit <code>App.jsx</code> and save to test HMR updates.
-        </p>
-        <button onClick={() => dispatch(setName("redux toolkit is cool"))}>
-          change app name
-        </button>
-        <button onClick={() => dispatch(clearName(""))}>clear app name</button>
-        <p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-          {" | "}
-          <a
-            className="App-link"
-            href="https://vitejs.dev/guide/features.html"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Vite Docs
-          </a>
-        </p>
-      </header>
+      <Routes>
+        <Route>
+          <Route
+            path="/"
+            element={
+              <RequireAuth>
+                <UsersManager />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/people"
+            element={
+              <RequireAuth>
+                <PeopleManager />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/starships"
+            element={
+              <RequireAuth>
+                <StarshipsManager />
+              </RequireAuth>
+            }
+          />
+          <Route path="/register" element={<RegisterPage />} />
+          <Route path="/login" element={<LoginPage />} />
+        </Route>
+      </Routes>
     </div>
   );
 }
